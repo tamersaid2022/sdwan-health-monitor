@@ -1,0 +1,51 @@
+# ============================================================================
+# SD-WAN Health Monitor - Configuration
+# Author: Tamer Khalifa (CCIE #68867)
+# ============================================================================
+
+---
+vmanage:
+  host: "192.168.1.200"
+  port: 443
+  username: "${VMANAGE_USER}"
+  password: "${VMANAGE_PASSWORD}"
+  verify_ssl: false
+
+monitoring:
+  interval: 300
+  cache_ttl: 60
+
+thresholds:
+  cpu:
+    warning: 70
+    critical: 90
+  memory:
+    warning: 75
+    critical: 90
+  tunnel_loss:
+    warning: 1.0
+    critical: 5.0
+  tunnel_latency:
+    warning: 100
+    critical: 300
+  tunnel_jitter:
+    warning: 30
+    critical: 100
+
+alerting:
+  enabled: true
+  channels:
+    slack:
+      enabled: false
+      webhook_url: "${SLACK_WEBHOOK}"
+      channel: "#sdwan-alerts"
+    email:
+      enabled: false
+      smtp_server: "smtp.company.com"
+      recipients:
+        - "netops@company.com"
+
+dashboard:
+  host: "0.0.0.0"
+  port: 5000
+  secret_key: "${FLASK_SECRET_KEY}"

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Tunnels - SD-WAN Health Monitor{% endblock %}
+{% block nav_tunnels %}text-blue-400 font-bold{% endblock %}
+
+{% block content %}
+<div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">IPsec Tunnels</h2>
+        <select id="tunnel-filter" class="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm">
+            <option value="all">All Tunnels</option>
+            <option value="degraded">Degraded Only</option>
+            <option value="down">Down Only</option>
+        </select>
+    </div>
+    <table class="w-full">
+        <thead class="text-gray-400 text-sm border-b border-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left">Source</th>
+                <th class="px-4 py-3 text-left">Destination</th>
+                <th class="px-4 py-3 text-left">Color</th>
+                <th class="px-4 py-3 text-left">State</th>
+                <th class="px-4 py-3 text-left">Latency</th>
+                <th class="px-4 py-3 text-left">Loss</th>
+                <th class="px-4 py-3 text-left">Jitter</th>
+                <th class="px-4 py-3 text-left">TX/RX (Mbps)</th>
+            </tr>
+        </thead>
+        <tbody id="tunnel-table">
+            <tr><td colspan="8" class="px-4 py-8 text-center text-gray-500">Loading tunnels...</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/api/tunnels').then(r=>r.json()).then(data=>{
+    const tbody=document.getElementById('tunnel-table');
+    tbody.innerHTML=data.tunnels.map(t=>{
+        const stateClass=t.state==='up'?'bg-green-600':t.state==='down'?'bg-red-600':'bg-yellow-600';
+        return `<tr class="border-b border-gray-700 hover:bg-gray-750">
+            <td class="px-4 py-3 font-mono">${t.source_ip}</td>
+            <td class="px-4 py-3 font-mono">${t.dest_ip}</td>
+            <td class="px-4 py-3">${t.color||'default'}</td>
+            <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs ${stateClass}">${t.state}</span></td>
+            <td class="px-4 py-3 ${t.latency>100?'text-red-400':'text-green-400'}">${t.latency||0}ms</td>
+            <td class="px-4 py-3 ${t.loss>1?'text-red-400':'text-green-400'}">${t.loss||0}%</td>
+            <td class="px-4 py-3 ${t.jitter>30?'text-yellow-400':'text-green-400'}">${t.jitter||0}ms</td>
+            <td class="px-4 py-3">${t.tx_rate||0} / ${t.rx_rate||0}</td>
+        </tr>`;
+    }).join('');
+});
+</script>
+{% endblock %}

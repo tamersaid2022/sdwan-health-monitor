@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SD-WAN Health Monitor{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <nav class="bg-gray-800 border-b border-gray-700 px-6 py-4">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <span class="text-2xl">📡</span>
+                <h1 class="text-xl font-bold">SD-WAN Health Monitor</h1>
+                <span id="status-indicator" class="bg-green-600 text-xs px-2 py-1 rounded-full">● Live</span>
+            </div>
+            <div class="flex gap-4">
+                <a href="/" class="hover:text-blue-400 transition {% block nav_dashboard %}{% endblock %}">Dashboard</a>
+                <a href="/devices" class="hover:text-blue-400 transition {% block nav_devices %}{% endblock %}">Devices</a>
+                <a href="/tunnels" class="hover:text-blue-400 transition {% block nav_tunnels %}{% endblock %}">Tunnels</a>
+            </div>
+        </div>
+    </nav>
+    <main class="max-w-7xl mx-auto px-6 py-8">
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="text-center text-gray-600 py-4 text-sm">
+        SD-WAN Health Monitor | Tamer Khalifa (CCIE #68867)
+    </footer>
+    <script src="/static/js/dashboard.js"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

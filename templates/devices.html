@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Devices - SD-WAN Health Monitor{% endblock %}
+{% block nav_devices %}text-blue-400 font-bold{% endblock %}
+
+{% block content %}
+<div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-700 flex justify-between items-center">
+        <h2 class="text-lg font-semibold">SD-WAN Edge Devices</h2>
+        <input type="text" id="device-search" placeholder="Search devices..."
+               class="bg-gray-700 border border-gray-600 rounded px-3 py-1 text-sm w-64">
+    </div>
+    <table class="w-full">
+        <thead class="text-gray-400 text-sm border-b border-gray-700">
+            <tr>
+                <th class="px-4 py-3 text-left">Hostname</th>
+                <th class="px-4 py-3 text-left">System IP</th>
+                <th class="px-4 py-3 text-left">Site ID</th>
+                <th class="px-4 py-3 text-left">Status</th>
+                <th class="px-4 py-3 text-left">CPU %</th>
+                <th class="px-4 py-3 text-left">Memory %</th>
+                <th class="px-4 py-3 text-left">Uptime</th>
+                <th class="px-4 py-3 text-left">Model</th>
+            </tr>
+        </thead>
+        <tbody id="device-table">
+            <tr><td colspan="8" class="px-4 py-8 text-center text-gray-500">Loading devices...</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+fetch('/api/devices').then(r=>r.json()).then(data=>{
+    const tbody=document.getElementById('device-table');
+    tbody.innerHTML=data.devices.map(d=>{
+        const statusClass=d.reachability==='reachable'?'bg-green-600':'bg-red-600';
+        return `<tr class="border-b border-gray-700 hover:bg-gray-750">
+            <td class="px-4 py-3 font-mono">${d.hostname||'-'}</td>
+            <td class="px-4 py-3">${d.system_ip}</td>
+            <td class="px-4 py-3">${d.site_id||'-'}</td>
+            <td class="px-4 py-3"><span class="px-2 py-1 rounded-full text-xs ${statusClass}">${d.reachability}</span></td>
+            <td class="px-4 py-3 ${d.cpu>80?'text-red-400':d.cpu>60?'text-yellow-400':'text-green-400'}">${d.cpu||'-'}%</td>
+            <td class="px-4 py-3 ${d.memory>80?'text-red-400':d.memory>60?'text-yellow-400':'text-green-400'}">${d.memory||'-'}%</td>
+            <td class="px-4 py-3">${d.uptime||'-'}</td>
+            <td class="px-4 py-3 text-gray-400">${d.model||'-'}</td>
+        </tr>`;
+    }).join('');
+});
+</script>
+{% endblock %}

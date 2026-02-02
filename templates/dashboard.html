@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% block title %}Dashboard - SD-WAN Health Monitor{% endblock %}
+{% block nav_dashboard %}text-blue-400 font-bold{% endblock %}
+
+{% block content %}
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8">
+    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+        <div class="text-3xl font-bold text-blue-400" id="total-devices">--</div>
+        <div class="text-xs text-gray-400 mt-1">Total Devices</div>
+    </div>
+    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+        <div class="text-3xl font-bold text-green-400" id="devices-up">--</div>
+        <div class="text-xs text-gray-400 mt-1">Reachable</div>
+    </div>
+    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+        <div class="text-3xl font-bold text-red-400" id="devices-down">--</div>
+        <div class="text-xs text-gray-400 mt-1">Unreachable</div>
+    </div>
+    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+        <div class="text-3xl font-bold text-purple-400" id="total-tunnels">--</div>
+        <div class="text-xs text-gray-400 mt-1">Active Tunnels</div>
+    </div>
+    <div class="bg-gray-800 rounded-lg p-4 text-center border border-gray-700">
+        <div class="text-3xl font-bold text-yellow-400" id="active-alerts">--</div>
+        <div class="text-xs text-gray-400 mt-1">Active Alerts</div>
+    </div>
+</div>
+
+<!-- Charts Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+        <h3 class="text-lg font-semibold mb-4">CPU Utilization</h3>
+        <div id="cpu-chart" style="height: 300px;"></div>
+    </div>
+    <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+        <h3 class="text-lg font-semibold mb-4">Tunnel Health</h3>
+        <div id="tunnel-chart" style="height: 300px;"></div>
+    </div>
+</div>
+
+<!-- Alerts Table -->
+<div class="bg-gray-800 rounded-lg border border-gray-700 overflow-hidden">
+    <div class="px-6 py-4 border-b border-gray-700">
+        <h2 class="text-lg font-semibold">Recent Alerts</h2>
+    </div>
+    <table class="w-full">
+        <thead class="text-gray-400 text-sm">
+            <tr><th class="px-4 py-3 text-left">Time</th><th class="px-4 py-3 text-left">Device</th>
+            <th class="px-4 py-3 text-left">Severity</th><th class="px-4 py-3 text-left">Message</th></tr>
+        </thead>
+        <tbody id="alerts-table">
+            <tr><td colspan="4" class="px-4 py-8 text-center text-gray-500">Loading alerts...</td></tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
